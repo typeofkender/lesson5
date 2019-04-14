@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Task 1</h1>
+<div id="chessboard"></div>
+<h1>Task 2</h1>
+<main>
+    <div class="cart"></div>
+    <div class="products"></div>
+</main>
+
+<script>
+/*Task 1*/
+    function chess() {
+        const CHESSBOARD = 10;
+        let board = document.querySelector('#chessboard');
+
+        for (let i = 0; i < CHESSBOARD; i++){
+            let div = document.createElement('div');
+            div.className = 'flexDiv';
+            for (let j = 0; j < CHESSBOARD; j++){
+                let cell = document.createElement('div');
+                cell.className = 'cell black white';
+                if (i !== 0 && i !== CHESSBOARD - 1 && j !== 0 && j !== CHESSBOARD - 1) {
+                    if (j % 2 || i % 2) {
+                        cell.classList.toggle('white');
+                        if (j % 2 && i % 2) {
+                            cell.classList.toggle('black');
+                            cell.classList.toggle('white');
+                        }} else {
+                        cell.classList.toggle('black');
+                    }
+                } else {
+                    cell.classList.remove('black');
+                    if (i > 0 && i < CHESSBOARD - 1) {
+                        cell.insertAdjacentHTML("beforeend", String(i));
+                        if (j > 0) {
+                            cell.classList.add('rotate');
+                        }
+                    }
+                    if (j > 0 && j < CHESSBOARD - 1) {
+                        cell.insertAdjacentHTML("beforeend", String.fromCharCode(64 + j));
+                        if (i < CHESSBOARD - 1) {
+                            cell.classList.add('rotate');
+                        }
+                    }}
+                div.appendChild(cell);
+            }
+            board.appendChild(div);
+        }
+    }
+    chess();
+
+/*Task 2*/
+
+var catalog = {
+    container: '.products',
+    catalog: [
+        {id: 1, title: 'Keyboard', price: 340},
+        {id: 2, title: 'Mouse', price: 140},
+        {id: 3, title: 'Notebook', price: 14000},
+        {id: 4, title: 'Gamepad', price: 2500},
+    ],
+    defaultImg: 'https://placehold.it/200x150',
+    render(){
+        var block = document.querySelector(this.container);
+        for (var product of this.catalog){
+            block.insertAdjacentHTML('beforeend', this.getMarkup(product));
+        }
+    },
+    getMarkup(product){
+        // return '<h3>' + product.title +'</h3>'
+        return `<div class="product-item">
+                    <img src="${this.defaultImg}" alt="">
+                    <div class="desc">
+                        <h3>${product.title}</h3>
+                        <p>${product.price} руб</p>
+                        <button class="buy-btn">Купить</button>
+                    </div>
+                </div>`
+    }
+};
+
+catalog.render();
+
+let cart = {
+    container: '.cart',
+    products: [
+        {id: 1, title: 'Keyboard', price: 340, quantity: 1},
+        {id: 2, title: 'Mouse', price: 140, quantity: 2},
+        {id: 3, title: 'Notebook', price: 14000, quantity: 3},
+    ],
+    productsPrice : 0,
+    allQuantity: 0,
+    defaultImg: 'https://placehold.it/100x75',
+    render() {
+        let block = document.querySelector(this.container);
+        if (this.products.length === 0) {
+            block.insertAdjacentHTML('beforeend', `<h1>Корзина пуста</h1>`)
+        } else {
+            for (let product of this.products) {
+                block.insertAdjacentHTML('beforeend', this.getMarkup(product));
+                this.allProductPrice(product);
+            }
+
+            block.insertAdjacentHTML('afterend', `<h1>В корзине ${this.allQuantity} товаров на сумму ${this.productsPrice} рублей!</h1>`);
+
+        }
+    },
+    allProductPrice(cartProduct) {
+        this.productsPrice += cartProduct.price * cartProduct.quantity;
+        this.allQuantity += cartProduct.quantity;
+    },
+    getMarkup(cartProduct) {
+        return `<div class="cart-item">
+                    <img src="${this.defaultImg}" alt="productInCart" class="img-in-cart">
+                    <div class="desc-cart">
+                        <h3>${cartProduct.title}</h3>
+                        <p>${cartProduct.quantity} шт</p>
+                        <p>${cartProduct.price} руб</p>
+                        <button class="del-btn">Удалить</button>
+                    </div>
+                </div>`
+    }
+};
+
+cart.render();
+</script>
+
+</body>
+</html>
